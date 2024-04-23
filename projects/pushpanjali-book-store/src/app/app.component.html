@@ -1,0 +1,23 @@
+<div class="container-fluid">
+  <header class="d-flex justify-content-between bg-dark text-white p-2">
+    <div>
+      <span class="brand">Stationary Shop</span>
+    </div>
+    <div class="menu">
+      <a routerLink="home">Home</a>
+      <a routerLink="product">Products</a>
+      <a routerLink="order">Order Details</a>
+      <a routerLink="user">Details</a>
+    </div>
+    <div class="icons">
+      <a routerLink="login"><span class="bi bi-person"></span></a>
+      <span class="bi bi-cart2"></span>
+    </div>
+  </header>
+  <div class="mt-2" style="display: none;">
+    <img src="assets/slide2.jpg" class="w-100 d-block">
+  </div>
+  <section class="mt-2">
+    <router-outlet></router-outlet>
+  </section>
+</div>

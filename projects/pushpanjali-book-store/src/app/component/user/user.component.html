@@ -1,0 +1,264 @@
+<div class="container-fluid row">
+    <div class="col-2 p-1">
+        <nav>
+            <div><button (click)="getAllUser()" class="btn btn-info w-100 ">All User</button></div>
+            <div><button (click)="loadCategory()" class="btn btn-info w-100 mt-2">Category</button></div>
+            <div><button (click)="stockDetails()" class="btn btn-info w-100 mt-2">Check Stock</button></div>
+        </nav>
+    </div>
+    <div  class="col-10">
+        <div *ngIf="userFlag">
+            <main>
+                <h2 style="align-items: center;">{{title}}</h2>
+                <div class="d-flex flex-wrap overflow-auto" style="height: 500px;">
+                    <table class="tab" border="1" bgColor="lightblue">
+                        <thead class="text-center bg-info">
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Mobile</th>
+                            <th>Gender</th>
+                            <th>Date Of Birth</th>
+                            <th>Address</th>
+                            <th>Role</th>
+                            <th>Registration Date</th>
+                            <th>Action</th>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let user of users">
+                                <td>{{user.fullName}}</td>
+                                <td>{{user.email}}</td>
+                                <td>{{user.mobile}}</td>
+                                <td>{{user.gender}}</td>
+                                <td>{{user.dob}}</td>
+                                <td>{{user.address}}</td>
+                                <td>{{user.role}}</td>
+                                <td>{{user.createdDate}}</td>
+                                <td colspan="2"><button (click)="deleteUserById(user.userId)">Delete</button> &nbsp;<button (click)="upadteUser(user)" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>  
+        </div>
+        <div *ngIf="categoryFlag">
+            <h3>Category</h3>
+            <ul class="text-decoration-none list-unstyled">
+                <li *ngFor="let category of categories">
+                    <button (click)="loadProductByCategory(category)" class="btn btn-dark w-100 p-3 mt-4">{{category}}</button>
+                </li>
+            </ul>
+        </div>
+        <div *ngIf="stockFlag">
+            <h3>Stock Details</h3>
+            <main class="col-9">
+                <h4 style="align-items: center;">{{title}}&nbsp;&nbsp; <span class="bi bi-plus"><button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#add">Add Product</button></span></h4>
+                <div class="d-flex flex-wrap overflow-auto" style="height: 500px;">
+                    <!-- For start -->
+                    <div *ngFor="let item of products" class="card m-2 p-2" style="width: 200px">
+                        <img [src]="item.filePath" height="180" class="card-img-top">
+                        <div class="card-header" style="height: 160px">
+                            <b><p style="color: green;">{{item.productName}}</p></b>
+                            <p style="color: green;">{{item.productPrice | currency:'USD'}}</p>
+                        </div>
+                        <div class="card-body">
+                            <div *ngIf="item.stock ; else elseblock">
+                                <h5 class="bg-success">{{item.stockStatus}}</h5>
+                                <h5 style="font-size: medium;">No of Product:: {{item.quantity}}</h5>
+                            </div>
+                            <ng-template #elseblock>
+                                <h5 class="bg-danger">{{item.stockStatus}}</h5>
+                                <h5 style="font-size: medium;">No of Product:: {{item.quantity}}</h5>
+                            </ng-template>
+                            <div>
+                                <button (click)="initProduct(item)" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#stock">Edit Stock</button>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <!-- For end -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+     <!-- Modal -->
+     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="card-header">Update</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-body">
+                        <form [formGroup]="update" (ngSubmit)="onUpdate()">
+                            <div class="mb-3">
+                                <label class="form-label">User Id</label>
+<!--                                 <input type="text" formControlName="firstName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" />
+ -->                                <input type="text" formControlName="userId" hidden class="form-control"/>
+
+                                <!-- <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
+                                    <div *ngIf="f.firstName.errors.required">First Name is required</div>
+                                </div> -->
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Full Name</label>
+<!--                                 <input type="text" formControlName="firstName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" />
+ -->                                <input type="text" formControlName="fullName" class="form-control"/>
+
+                                <!-- <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
+                                    <div *ngIf="f.firstName.errors.required">First Name is required</div>
+                                </div> -->
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+<!--                                 <input type="text" formControlName="lastName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" />
+ -->                                <input type="text" formControlName="email" class="form-control"/>
+
+                                <!-- <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
+                                    <div *ngIf="f.lastName.errors.required">Last Name is required</div>
+                                </div> -->
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Mobile</label>
+<!--                                 <input type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />
+ -->                                <input type="text" formControlName="mobile" class="form-control"/>
+
+                                <!-- <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+                                    <div *ngIf="f.username.errors.required">Username is required</div>
+                                </div> -->
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Gender</label>
+<!--                                 <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+ -->                                <input type="text" formControlName="gender" class="form-control"/>
+
+                                <!-- <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                                    <div *ngIf="f.password.errors.required">Password is required</div>
+                                    <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+                                </div> -->
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Date Of Birth</label>
+<!--                                 <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+ -->                                <input type="text" formControlName="dob" class="form-control"/>
+
+                                <!-- <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                                    <div *ngIf="f.password.errors.required">Password is required</div>
+                                    <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+                                </div> -->
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Role</label>
+<!--                                 <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+ -->                                <input type="text" formControlName="role" class="form-control"/>
+
+                                <!-- <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                                    <div *ngIf="f.password.errors.required">Password is required</div>
+                                    <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+                                </div> -->
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Address</label>
+<!--                                 <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+ -->                                <input type="text" formControlName="address" class="form-control"/>
+
+                                <!-- <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                                    <div *ngIf="f.password.errors.required">Password is required</div>
+                                    <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+                                </div> -->
+                            </div>
+                            <div>
+                                <button class="btn btn-primary">
+                                    Update
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+        </div>
+    </div>
+      <!-- Modal End-->
+
+      <!-- Modal Stock-->
+    <div class="modal fade" id="stock" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fs-5" id="exampleModalLabel"><b><p style="color: green;">{{product.category}}</p></b></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="stockDetail" (ngSubmit)="editStock()">                           
+                    <dl>
+                        <dt><label>Category</label></dt>
+                        <dd><input type="text" name="category" formControlName="category"  readonly></dd>
+
+                        <dt><label>Product Id</label></dt>
+                        <dd><input type="text" name="pid" formControlName="pid" readonly></dd>
+                        
+                        <dt><label>Product Name</label></dt>
+                        <dd><input type="text" name="productName" formControlName="productName" readonly></dd>
+
+                        <dt><label>Price</label></dt>
+                        <dd><input type="text" name="price" formControlName="price" readonly></dd>
+
+                        <dt><label>Enter Quantity</label></dt>
+                        <input  type="number" name="quantity" formControlName="quantity">
+
+                    </dl>
+                    <button class="btn btn-primary">Update</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+        </div>
+    </div>
+      <!-- Modal End-->
+
+       <!--Add Modal Strat-->
+    <div class="modal fade" id="add" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fs-5" id="exampleModalLabel"><b><p style="color: green;">Add Product</p></b></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="addProducts" (ngSubmit)="addProduct()">                           
+                    <dl>
+                        <dt><label>Product Type</label></dt>
+                        <dd><input type="text" name="productType" formControlName="productType"></dd>
+
+                        <dt><label>Product Name</label></dt>
+                        <dd><input type="text" name="productName" formControlName="productName"></dd>
+                        
+                        <dt><label>Product Price</label></dt>
+                        <dd><input type="text" name="productPrice" formControlName="productPrice"></dd>
+
+                        <dt><label>Quantity</label></dt>
+                        <dd><input type="number" name="quantity" formControlName="quantity"></dd>
+
+                        <dt><label>File Path</label></dt>
+                        <input  type="text" name="filePath" formControlName="filePath">
+
+                    </dl>
+                    <button class="btn btn-primary">Add</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+        </div>
+    </div>
+      <!--Add Modal End-->
+</div>

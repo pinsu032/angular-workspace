@@ -1,0 +1,14 @@
+td{
+    font-size: small;
+    font-weight: 500;
+    border-left: 1px solid black;
+    text-align: center;
+}
+.tab{
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #444;
+    background-color: #ffc;
+    overflow: auto;
+    height: 100%;
+}

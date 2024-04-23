@@ -1,0 +1,65 @@
+<div class="container-fluid row">
+    <nav class="col-3">
+        <h2 style="align-items: center;">Categories</h2>
+        <app-filter (FilterChange)="filterProduct($event)" (FilterClicked)="categoryChange($event)"></app-filter>
+    </nav>
+    <main class="col-9">
+        <h2 style="align-items: center;">{{title}}</h2>
+        <div class="d-flex flex-wrap overflow-auto" style="height: 500px;">
+            <!-- For start -->
+            <div *ngFor="let item of Products" class="card m-2 p-2" style="width: 200px">
+                <img [src]="item.filePath" height="180" class="card-img-top">
+                <div class="card-header" style="height: 160px">
+                    <b><p style="color: green;">{{item.productName}}</p></b>
+                    <p style="color: green;">{{item.productPrice | currency:'USD'}}</p>
+                </div>
+                <div class="card-body">
+                    <button type="button" (click)="setDefaultValue(item)" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Place Order
+                    </button>
+                </div>
+                
+            </div>
+            <!-- For end -->
+        </div>
+    </main>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fs-5" id="exampleModalLabel"><b><p style="color: green;">{{product.productName}}</p></b></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div *ngIf="formFlag" class="modal-body">
+                <form [formGroup]="orderDetail" (submit)="placeOrder(orderDetail.value)">                           
+                    <dl>
+                        <dt><label>Category</label></dt>
+                        <dd><input type="text" name="category" formControlName="category"  readonly></dd>
+
+                        <dt><label>Product Id</label></dt>
+                        <dd><input type="text" name="pid" formControlName="pid" readonly></dd>
+                        
+                        <dt><label>Product Name</label></dt>
+                        <dd><input type="text" name="productName" formControlName="productName" readonly></dd>
+
+                        <dt><label>Price</label></dt>
+                        <dd><input type="text" name="price" formControlName="price" readonly></dd>
+
+                        <dt><label>Enter Quantity</label></dt>
+                        <input (blur)="checkStock(product.pid,$event)" type="number" name="noOfProduct" formControlName="noOfProduct">
+
+                    </dl>
+                    <button *ngIf="buttonFlag" class="btn btn-primary">Place Order</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+        </div>
+    </div>
+      <!-- Modal End-->
+
+    
+</div>

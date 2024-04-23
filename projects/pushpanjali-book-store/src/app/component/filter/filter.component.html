@@ -1,0 +1,7 @@
+<div>
+    <ul class="list-unstyled">
+        <li *ngFor="let category of categories">
+            <h3><button (click)="buttonClicked($event)" name={{category}} class="btn btn-info w-100">{{category}}</button></h3>
+        </li>
+    </ul>
+</div>
